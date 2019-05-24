@@ -20,6 +20,13 @@ import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import axios from 'axios';
+import Pagina from './Pagination';
+import Pagination from 'react-paginating';
+
+const articles = [];
+const limit = 10;
+const pageCount = 3;
+const total = articles.length*limit;
 
 const styles = theme => ({
     card: {
@@ -46,18 +53,16 @@ const styles = theme => ({
       backgroundColor: blue[500],
     },
   });
-
+  
 class Mainview extends React.Component{
     constructor(props) {
         super(props);
         this.state = {articles:[],
             expanded: false,
             currentPage: 1,
-            todosPerPage: 3
                     };
         this.handleDelete = this.handleDelete.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
-        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount(){
@@ -82,37 +87,17 @@ class Mainview extends React.Component{
         this.setState(state => ({ expanded: !state.expanded }));
       };
 
-    handleClick(event) {
-    this.setState({
-          currentPage: Number(event.target.id)
+      handlePageChange = (page, e) => {
+        this.setState({
+          currentPage: page
         });
-    }
-    render(){
-        const { classes, articles, currentPage, todosPerPage } = this.props;
-        const indexOfLastTodo = currentPage * todosPerPage;
-        const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
-        const currentTodos = articles.slice(indexOfFirstTodo, indexOfLastTodo);
-        const renderTodos = currentTodos.map((articles, index) => {
-            return <li key={index}>{articles}</li>;
-          });
+      }
 
-        // Logic for displaying page numbers
-        const pageNumbers = [];
-        for (let i = 1; i <= Math.ceil(articles.length / todosPerPage); i++) {
-          pageNumbers.push(i);
-        }
-        
-        const renderPageNumbers = pageNumbers.map(number => {
-            return (
-              <li
-                key={number}
-                id={number}
-                onClick={this.handleClick}
-              >
-                {number}
-              </li>
-            );
-          });
+    render(){
+        const { classes, articles, currentPage } = this.props;
+        const limit = 2;
+        const pageCount = 3;
+        const total = articles.length*limit;
 
         console.log("STATE POSTS",this.state.posts);
         return(
@@ -124,7 +109,7 @@ class Mainview extends React.Component{
                 <br/>
                 <br/>
                 <Typography><h1>Posts</h1></Typography>
-                {articles
+                {articles//[currentPage -1]
                 .sort(({ id: previousID }, { id: currentID}) => previousID - currentID)   
                 .map(data =>
                     <div>
@@ -192,14 +177,95 @@ class Mainview extends React.Component{
                     </div>
                     )}
                 );
-                <div>
-            <ul>
-              {renderTodos}
-            </ul>
-            <ul id="page-numbers">
-              {renderPageNumbers}
-            </ul>
-          </div>
+                <Pagination
+          total={total}
+          limit={limit}
+          pageCount={pageCount}
+          currentPage={currentPage}
+        >
+          {({
+            pages,
+            currentPage,
+            hasNextPage,
+            hasPreviousPage,
+            previousPage,
+            nextPage,
+            totalPages,
+            getPageItemProps
+          }) => (
+            <div>
+              <Button
+                style={{backgroundColor: '#fdce09', borderColor: 'black'}}
+                variant="outlined"
+                {...getPageItemProps({
+                  pageValue: 1,
+                  onPageChange: this.handlePageChange
+                })}
+              >
+                Primera
+              </Button>
+
+              {hasPreviousPage && (
+                <Button
+                style={{backgroundColor: '#fdce09', borderColor: 'black'}}
+                variant="outlined"
+                  {...getPageItemProps({
+                    pageValue: previousPage,
+                    onPageChange: this.handlePageChange
+                  })}
+                >
+                  {"<"}
+                </Button>
+              )}
+
+              {pages.map(page => {
+                let activePage = null;
+                if (currentPage === page) {
+                  activePage = { backgroundColor: "#fdce09" };
+                }
+                return (
+                  <Button
+                  style={{backgroundColor: '#fdce09', borderColor: 'black'}}
+                  variant="outlined"
+                    {...getPageItemProps({
+                      pageValue: page,
+                      key: page,
+                      style: activePage,
+                      onPageChange: this.handlePageChange
+                    })}
+                  >
+                    {page}
+                  </Button>
+                );
+              })}
+
+              {hasNextPage && (
+                <Button
+                style={{backgroundColor: '#fdce09', borderColor: 'black'}}
+                variant="outlined"
+                  {...getPageItemProps({
+                    pageValue: nextPage,
+                    onPageChange: this.handlePageChange
+                  })}
+                >
+                  {">"}
+                </Button>
+              )}
+
+              <Button
+              style={{backgroundColor: '#fdce09', borderColor: 'black'}}
+              variant="outlined"
+                {...getPageItemProps({
+                  pageValue: totalPages,
+                  onPageChange: this.handlePageChange
+                })}
+              >
+                Ultima
+              </Button>
+            </div>
+          )}
+        </Pagination>
+         
                                 <br />
                                 <br />
                                 <br />
