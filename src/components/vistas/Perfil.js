@@ -1,6 +1,7 @@
 import React from 'react';
 import MediaCard from './Cardperfil';
 import Tabperfil from './Tab';
+import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 
 class Perfil extends React.Component {
@@ -27,7 +28,7 @@ class Perfil extends React.Component {
                 <br/>
                 <br/>
                 <br/>
-                Perfil: {this.longeur}
+                <div align="center"><Typography><h1>Usuario: {this.state.longeur}</h1></Typography></div>
                     <MediaCard render={(props) => <MediaCard {...props} />} />
                     <br />
                     <div align="center"

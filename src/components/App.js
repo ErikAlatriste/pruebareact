@@ -8,7 +8,9 @@ import Entradas from './vistas/Entradas';
 import Header from './Header';
 import Footer from './Footer';
 import history from '../history';
+import axios from 'axios';
 
+const GETUSER = 'https://reqres.in/api/users?page=2';
 class App extends React.Component {
     constructor(props) {
         super(props)
@@ -20,6 +22,35 @@ class App extends React.Component {
                 username: ''},
                 authenticated: true
         };
+    }
+
+    componentDidMount() {
+        const Token = window.localStorage.getItem('Authorization');
+        if (Token) {
+            console.log('Token found');
+            axios.get(GETUSER, {
+                headers: {'Authorization':Token}})
+                .then(response => {
+                    if (!response.ok) {
+                      if (response.status === 401){
+                        window.localStorage.clear()
+                        window.location.reload()
+                      } else {
+                        throw Error(response.statusText);
+                      }
+                    }
+                    return response.json();
+                    })
+                .then(data => {
+                  this.handleLogin(data);
+                })
+                .catch(function(error) {
+                  console.log(error);
+                });
+            } else{
+              console.log('Token not found');
+              this.setState({authenticated: true})
+            }
     }
 
     handleLogin(data) {

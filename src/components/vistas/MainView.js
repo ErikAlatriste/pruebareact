@@ -50,11 +50,14 @@ const styles = theme => ({
 class Mainview extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {posts:[],
-            expanded: false
+        this.state = {articles:[],
+            expanded: false,
+            currentPage: 1,
+            todosPerPage: 3
                     };
         this.handleDelete = this.handleDelete.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount(){
@@ -79,8 +82,38 @@ class Mainview extends React.Component{
         this.setState(state => ({ expanded: !state.expanded }));
       };
 
+    handleClick(event) {
+    this.setState({
+          currentPage: Number(event.target.id)
+        });
+    }
     render(){
-        const { classes, articles } = this.props;
+        const { classes, articles, currentPage, todosPerPage } = this.props;
+        const indexOfLastTodo = currentPage * todosPerPage;
+        const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
+        const currentTodos = articles.slice(indexOfFirstTodo, indexOfLastTodo);
+        const renderTodos = currentTodos.map((articles, index) => {
+            return <li key={index}>{articles}</li>;
+          });
+
+        // Logic for displaying page numbers
+        const pageNumbers = [];
+        for (let i = 1; i <= Math.ceil(articles.length / todosPerPage); i++) {
+          pageNumbers.push(i);
+        }
+        
+        const renderPageNumbers = pageNumbers.map(number => {
+            return (
+              <li
+                key={number}
+                id={number}
+                onClick={this.handleClick}
+              >
+                {number}
+              </li>
+            );
+          });
+
         console.log("STATE POSTS",this.state.posts);
         return(
             <div align="center">
@@ -91,7 +124,9 @@ class Mainview extends React.Component{
                 <br/>
                 <br/>
                 <Typography><h1>Posts</h1></Typography>
-                {articles.map(data =>
+                {articles
+                .sort(({ id: previousID }, { id: currentID}) => previousID - currentID)   
+                .map(data =>
                     <div>
                         <Grid>
                         <Card className={classes.card}>
@@ -116,7 +151,7 @@ class Mainview extends React.Component{
                         />
                         <CardContent>
                         <Typography component="p">
-                        <div>{data.body}</div>
+                        <div>{data.id}.- {data.body}</div>
                         <div><b></b> {moment(new Date(data.createdAt)).fromNow()}</div>
                         </Typography>
                         </CardContent>
@@ -157,7 +192,20 @@ class Mainview extends React.Component{
                     </div>
                     )}
                 );
-  
+                <div>
+            <ul>
+              {renderTodos}
+            </ul>
+            <ul id="page-numbers">
+              {renderPageNumbers}
+            </ul>
+          </div>
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
             </div>
         );
     }

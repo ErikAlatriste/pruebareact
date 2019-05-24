@@ -21,7 +21,7 @@ const styles = {
 }
 
 function MediaCard(props) {
-  const { classes, longeur } = props;
+  const { classes } = props;
   return (
     <Card className={classes.card} style={{margin: 10}}>
       <CardActionArea>
@@ -44,7 +44,7 @@ function MediaCard(props) {
       </CardActionArea>
       <CardActions>
         <Button size="small" color="primary">
-          Editar Perfil
+          Seguir Usuario
         </Button>
         <Button size="small" color="primary">
           Cerrar Sesion

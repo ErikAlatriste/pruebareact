@@ -7,6 +7,7 @@ import bio from '../../assets/logo.png';
 import Typography from '@material-ui/core/Typography';
 
 let authToken ='';
+let TOKEN = '';
 
 class Signup extends React.Component {
 
