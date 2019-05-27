@@ -22,6 +22,7 @@ import moment from 'moment';
 import axios from 'axios';
 import Pagina from './Pagination';
 import Pagination from 'react-paginating';
+import { Link } from 'react-router-dom';
 
 const articles = [];
 const limit = 10;
@@ -72,15 +73,17 @@ class Mainview extends React.Component{
     }
 
     handleDelete(id) {
-        const { onDelete } =this.props;
+        const { onDelete } = this.props;
         return axios.delete(`https://jsonplaceholder.typicode.com/posts/${id}`)
         .then(() => onDelete(id));
+        
     }
 
     handleEdit(data) {
-        const { setEdit } = this.props;
-
-        setEdit(data);
+        // const { setEdit } = this.props;
+        // return axios.put(`https://jsonplaceholder.typicode.com/posts/${id}`)
+        // .then(() => )
+        // setEdit(data);
     }
 
     handleExpandClick = () => {
@@ -158,7 +161,9 @@ class Mainview extends React.Component{
                                 <ExpandMoreIcon />
                             </IconButton>
                             <Button onClick={() => this.handleDelete(data._id)}>Eliminar</Button>
-                            <Button onClick={() => this.handleEdit(data)}>Editar</Button>
+                            <Link to={`/${data.id}/entradas`}>
+                              <Button onClick={() => this.handleEdit(data)}>Editar</Button>
+                            </Link>
                             <Button>Leer</Button>
                         </CardActions>
                             <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>

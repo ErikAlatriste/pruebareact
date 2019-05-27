@@ -5,6 +5,7 @@ import Signup from './login/Signup';
 import Perfil from './vistas/Perfil';
 import Mainview from './vistas/MainView';
 import Entradas from './vistas/Entradas';
+import EntradasEdit from './vistas/EntradasEdit';
 import Header from './Header';
 import Footer from './Footer';
 import history from '../history';
@@ -19,6 +20,8 @@ class App extends React.Component {
                 email: '',
                 id: '',
                 permission_to_post: true,
+                permission_to_edit: true,
+                permission_to_delete: true,
                 username: ''},
                 authenticated: true
         };
@@ -69,6 +72,7 @@ class App extends React.Component {
                         <Route path="/mainview"exact component={Mainview} />
                         <Route path="/perfil"exact component={Perfil} />
                         <Route path="/entradas"exact render={(props) => <Entradas {...props} user={this.state.user} /> } />
+                        <Route exact path="/:id/entradas" component={EntradasEdit} /> } />
                     </Switch>
                     <Footer />
                 </Router>
