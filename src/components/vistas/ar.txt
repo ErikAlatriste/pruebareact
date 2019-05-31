@@ -1,0 +1,73 @@
+import React from 'react';
+import {Button, Typography, TextField} from '@material-ui/core';
+import axios from 'axios';
+
+class Comments extends React.Component {
+  state = {
+    todos: [],
+    body: ''
+  }
+  componentDidMount() {
+    axios
+      .get("https://jsonplaceholder.typicode.com/comments")
+      .then(res => this.setState({ todos: res.data }));
+  }
+
+  onChange = e => {
+    this.setState({
+      [e.target.name]:e.target.value
+    });
+  }
+
+  Comments = body => {
+    axios
+    .post("https://jsonplaceholder.typicode.com/comments", {
+      body,
+      completed: false
+    })
+    .then(res =>
+      console.log(res),
+      this.setState({
+        todos: [...this.state.todos, res.data]
+      })  
+    )
+
+  }
+
+  onSubmit = e => {
+    e.preventDefault()
+      this.Comments(this.state.body);
+      this.setState({
+        body: '',
+        
+      }, console.log(this.state.body));
+  };
+
+  render() {
+    const body = this.state.body;
+    return(
+      <div>
+      <form onSubmit={this.onSubmit} style={{display: 'flex'}}>
+      <TextField 
+        className="add-todo"
+        type="text"
+        name="title"
+        placeholder="Comentarios"
+        style={{padding: '5px', width:500}}
+        value={this.state.title}
+        onChange={this.onChange}
+        autoComplete="off"
+        variant="outlined"
+      />
+      <Button onSubmit={this.onSubmit}>
+          Enviar
+      </Button>
+      </form>
+      <Typography><h2>Comentarios:</h2></Typography>
+      <Typography>{body}</Typography>
+      </div>
+    );
+  }
+}
+  
+export default Comments;

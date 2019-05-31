@@ -1,8 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './components/App';
-import { Provider } from 'react-redux';
-import store from './reducers/store';
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./components/App";
+import { Provider } from "react-redux";
+import store from "./reducers/store";
 //import { createStore, applyMiddleware, compose } from 'redux';
 //import reduxThunk from 'redux-thunk'
 //import reducers from './reducers';
@@ -11,8 +11,8 @@ import store from './reducers/store';
 //const store = createStore(reducers, composeEnhancers(applyMiddleware(reduxThunk)));
 
 ReactDOM.render(
-    <Provider store={store}>
+  <Provider store={store}>
     <App />,
-    </Provider>,
-    document.querySelector('#root')
+  </Provider>,
+  document.querySelector("#root")
 );
